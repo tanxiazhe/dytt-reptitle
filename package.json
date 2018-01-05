@@ -1,36 +1,19 @@
 {
-  "name": "dytt-reptitle",
-  "version": "1.0.5",
-  "description": "电影天堂爬虫",
+  "name": "catchpic",
+  "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/HuangXiZhou/DyttReptitle.git"
-  },
-  "keywords": [
-    "Node.js",
-    "Reptitle"
-  ],
-  "author": "xizhouh@gmail.com",
-  "license": "MIT",
-  "bin": {
-    "reptitle": "./index.js"
-  },
-  "bugs": {
-    "url": "https://github.com/HuangXiZhou/DyttReptitle/issues"
-  },
-  "homepage": "https://github.com/HuangXiZhou/DyttReptitle#readme",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "chalk": "^2.3.0",
     "cheerio": "^1.0.0-rc.2",
-    "commander": "^2.11.0",
-    "iconv-lite": "^0.4.19",
-    "inquirer": "^3.3.0",
-    "lodash": "^4.17.4",
-    "mongodb": "^2.2.33",
-    "ora": "^1.3.0"
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mongodb": "^3.0.1",
+    "superagent": "^3.8.2",
+    "superagent-charset": "^1.2.0"
   }
 }
