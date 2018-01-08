@@ -2,7 +2,7 @@ var cheerio = require('cheerio');
 var http = require('http');
 var iconv = require('iconv-lite');
 
-var url = 'http://www.ygdy8.net/html/gndy/dyzz/index.html';
+const url = 'http://www.ygdy8.net/html/gndy/dyzz/index.html';
 var items = [];
 var index = 1;
 var urls = [];
@@ -42,13 +42,14 @@ function getItems(url, i) {
                 getItems(url, ++index); //递归执行，页数+1
             } else {
                 console.log("items获取完毕！");
-                write_to_file_in_JSON(items,'/Users/catchPic/','urls')
+                write_to_file_in_JSON(items, './', 'urls')
                 getBtLink(urls, 0)
             }
 
         });
     });
 }
+
 function getBtLink(urls, n) { //urls里面包含着所有详情页的地址
     console.log("正在获取第" + n + "个url的内容" + urls[n].url);
     http.get('http://www.ygdy8.net' + urls[n].url, function (sres) {
@@ -71,7 +72,7 @@ function getBtLink(urls, n) { //urls里面包含着所有详情页的地址
                 getBtLink(urls, ++n); //递归
             } else {
                 console.log("btlink获取完毕！");
-                write_to_file_in_JSON(btLink,'/Users/catchPic/','bturls')
+                write_to_file_in_JSON(btLink, './', 'bturls')
                 save(btLink);
             }
         });
@@ -80,78 +81,78 @@ function getBtLink(urls, n) { //urls里面包含着所有详情页的地址
 
 
 
-function write_to_file_in_JSON(items,dir,filename) {   
-    var fs= require('fs');
-    var dirname = dir +filename+'.json';
+function write_to_file_in_JSON(items, dir, filename) {
+    var fs = require('fs');
+    var dirname = dir + filename + '.json';
     var path = require('path');
-    console.log('准备写入文件'+dirname);
+    console.log('准备写入文件' + dirname);
     fs.writeFile(dirname, JSON.stringify(items));
-    console.log(dirname+'写入'+items.length +'条记录');
+    console.log(dirname + '写入' + items.length + '条记录');
 }
 
 function save(btLink) {
     var MongoClient = require('mongodb').MongoClient; //导入依赖
     MongoClient.connect(mongo_url, function (err, db) {
-      if (err) {
-        console.error(err);
-        return;
-      } else {
-        console.log("成功连接数据库");
-        const myAwesomeDB = db.db('catchPic')
-        var collection = myAwesomeDB.collection('nodeReptitle');
-        collection.insertMany(btLink, function (err,result) { //插入数据
-          if (err) {
+        if (err) {
             console.error(err);
-          } else {
-            console.log("保存数据成功");
-          }
-        })
-        db.close();
-      }
+            return;
+        } else {
+            console.log("成功连接数据库");
+            const myAwesomeDB = db.db('catchPic')
+            var collection = myAwesomeDB.collection('nodeReptitle');
+            collection.insertMany(btLink, function (err, result) { //插入数据
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log("保存数据成功");
+                }
+            })
+            db.close();
+        }
     });
-  }
+}
 
-  function del(){
+function del() {
     var MongoClient = require('mongodb').MongoClient; //导入依赖
     MongoClient.connect(mongo_url, function (err, db) {
-      if (err) {
-        console.error(err);
-        return;
-      } else {
-        console.log("成功连接数据库");
-        const myAwesomeDB = db.db('catchPic')
-        myAwesomeDB.dropCollection('nodeReptitle', function (err,result) { //删除数据
-          if (err) {
+        if (err) {
             console.error(err);
-          } else {
-            console.log(result);
-          }
-        })
-        db.close();
-      }
+            return;
+        } else {
+            console.log("成功连接数据库");
+            const myAwesomeDB = db.db('catchPic')
+            myAwesomeDB.dropCollection('nodeReptitle', function (err, result) { //删除数据
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log(result);
+                }
+            })
+            db.close();
+        }
     });
-    
-  }
 
-  function testConnection(){
+}
+
+function testConnection() {
     var fs = require('fs'); // 引入fs模块
 
     // 异步读取
-    fs.readFile('bturls.json', function(err, data) {
+    fs.readFile('bturls.json', function (err, data) {
         // 读取文件失败/错误
         if (err) {
             throw err;
         }
         // 读取文件成功        
-       save( JSON.parse(data.toString()));
+        save(JSON.parse(data.toString()));
     });
-  }
+}
 
 function main() {
     console.log("开始爬取");
     //del();
     //testConnection();
-    getItems(url, index); 
+    getItems(url, index);
 }
 
 main(); //运行主函数
